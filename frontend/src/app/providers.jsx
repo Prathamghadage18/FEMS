@@ -1,11 +1,7 @@
 "use client";
 
-import { LanguageProvider } from '../context/LanguageContext';
+import { LanguageProvider } from "../context/LanguageContext";
 
 export default function Providers({ children }) {
-  return (
-    <LanguageProvider>
-      {children}
-    </LanguageProvider>
-  );
+  return <LanguageProvider>{children}</LanguageProvider>;
 }

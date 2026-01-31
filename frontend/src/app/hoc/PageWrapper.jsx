@@ -1,4 +1,3 @@
-
 import { Navbar, Footer, Header } from "../components";
 
 const PageWraper = (PageComponent, id = null) =>

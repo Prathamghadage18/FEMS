@@ -1,23 +1,25 @@
-
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 import { PageWraper } from "../../app/hoc";
-import { yourCrops as defaultCrops, relatedCrops } from '../../constants';
-import { cropsAPI, isAuthenticated } from '../../services/api';
+import { yourCrops as defaultCrops, relatedCrops } from "../../constants";
+import { cropsAPI, isAuthenticated } from "../../services/api";
 
-const CropCard = ({index, name, variety, rate, img, description}) => {
+const CropCard = ({ index, name, variety, rate, img, description }) => {
   // Use default image if none provided
   const imageSrc = img || defaultCrops[0]?.img;
-  
+
   return (
-    <div className="p-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100" key={index}>
+    <div
+      className="p-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+      key={index}
+    >
       <div className="bg-gray-100 w-40 h-28 rounded-lg overflow-hidden">
         {imageSrc ? (
-          <Image 
-            alt={name || 'Crop'}
+          <Image
+            alt={name || "Crop"}
             src={imageSrc}
             className="w-full h-full object-cover rounded-lg hover:scale-110 transition-all duration-300"
             width={160}
@@ -31,22 +33,28 @@ const CropCard = ({index, name, variety, rate, img, description}) => {
       </div>
       <div className="flex flex-col pt-3">
         <span className="font-bold text-gray-800 text-lg">{name}</span>
-        <span className="text-sm text-gray-600 font-medium">{variety || description || 'Various'}</span>
-        {rate && <span className="text-sm font-bold text-green-700 mt-1">₹{rate} per kg</span>}
+        <span className="text-sm text-gray-600 font-medium">
+          {variety || description || "Various"}
+        </span>
+        {rate && (
+          <span className="text-sm font-bold text-green-700 mt-1">
+            ₹{rate} per kg
+          </span>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 const Crops = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [crops, setCrops] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      router.push('/auth/signin');
+      router.push("/auth/signin");
       return;
     }
     fetchCrops();
@@ -58,7 +66,7 @@ const Crops = () => {
       const res = await cropsAPI.getAll();
       setCrops(res.rows || []);
     } catch (err) {
-      setError('Failed to load crops');
+      setError("Failed to load crops");
       setCrops([]);
     } finally {
       setLoading(false);
@@ -82,8 +90,8 @@ const Crops = () => {
         ) : crops.length > 0 ? (
           <div className="flex flex-wrap gap-4 md:gap-6">
             {crops.map((crop, index) => (
-              <CropCard 
-                key={crop.id || index} 
+              <CropCard
+                key={crop.id || index}
                 index={index}
                 name={crop.name || crop.id}
                 variety={crop.variety}
@@ -110,7 +118,7 @@ const Crops = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
 export default PageWraper(Crops);

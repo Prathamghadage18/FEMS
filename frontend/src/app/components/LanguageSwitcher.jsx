@@ -1,14 +1,14 @@
 "use client";
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from "../../context/LanguageContext";
 
-const LanguageSwitcher = ({ className = '' }) => {
+const LanguageSwitcher = ({ className = "" }) => {
   const { language, changeLanguage } = useLanguage();
 
   const handleChange = (e) => {
     const newLang = e.target.value;
     changeLanguage(newLang);
     // Store in localStorage and reload
-    localStorage.setItem('fems-language', newLang);
+    localStorage.setItem("fems-language", newLang);
     window.location.reload();
   };
 
