@@ -1,0 +1,17 @@
+{
+  "name": "fems",
+  "version": "1.0.0",
+  "description": "The Farmer Empowerment Management System is a web application aimed at empowering farmers by providing them with various tools and resources to manage their agricultural activities effectively. This project utilizes NestJS for the backend, Next.js for the frontend, and a combination of JavaScript (JS) and TypeScript (TS) languages along with React for the user interface.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "cd frontend && npm run dev",
+    "server": "cd backend && nest start:dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fems": "file:"
+  }
+}
