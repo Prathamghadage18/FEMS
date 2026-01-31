@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import { PageWraper } from '../app/hoc';
 import { isAuthenticated, getUser, plotsAPI, cropsAPI, cropPlanningAPI, tasksAPI, marketPricesAPI } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 const StatCard = ({ title, value, icon, link, color }) => (
   <Link href={link} className={`${color} p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100`}>
@@ -55,13 +56,13 @@ const getWeatherCondition = (code) => {
 };
 
 // Real-time Weather Widget Component
-const WeatherWidget = ({ weather, loading, error, onRefresh, location }) => {
+const WeatherWidget = ({ weather, loading, error, onRefresh, location, t }) => {
   if (loading) {
     return (
       <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-5 rounded-xl text-white min-h-[200px] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin text-4xl mb-2">🌀</div>
-          <p className="text-blue-100">Fetching weather...</p>
+          <p className="text-blue-100">{t('weather.fetchingWeather')}</p>
         </div>
       </div>
     );
@@ -72,12 +73,12 @@ const WeatherWidget = ({ weather, loading, error, onRefresh, location }) => {
       <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-5 rounded-xl text-white min-h-[200px]">
         <div className="text-center py-4">
           <p className="text-4xl mb-2">🌤️</p>
-          <p className="text-blue-100 mb-3">Could not fetch weather</p>
+          <p className="text-blue-100 mb-3">{t('weather.couldNotFetch')}</p>
           <button 
             onClick={onRefresh}
             className="bg-blue-400 hover:bg-blue-300 px-4 py-2 rounded-lg text-sm transition-colors"
           >
-            Try Again
+            {t('weather.tryAgain')}
           </button>
         </div>
       </div>
@@ -93,7 +94,7 @@ const WeatherWidget = ({ weather, loading, error, onRefresh, location }) => {
             <button 
               onClick={onRefresh} 
               className="text-blue-200 hover:text-white text-xs transition-colors"
-              title="Refresh weather"
+              title={t('common.refresh')}
             >
               🔄
             </button>
@@ -104,16 +105,16 @@ const WeatherWidget = ({ weather, loading, error, onRefresh, location }) => {
         <div className="text-right">
           <span className="text-5xl">{weather.current.icon}</span>
           <p className="text-blue-200 text-xs mt-1">
-            Feels like {Math.round(weather.current.feels_like)}°C
+            {t('weather.feelsLike')} {Math.round(weather.current.feels_like)}°C
           </p>
         </div>
       </div>
       <div className="flex gap-4 mt-4 text-sm flex-wrap">
-        <span title="Humidity">💧 {weather.current.humidity}%</span>
-        <span title="Wind Speed">🌬️ {Math.round(weather.current.wind)} km/h</span>
-        <span title="UV Index">☀️ UV {weather.current.uv}</span>
+        <span title={t('weather.humidity')}>💧 {weather.current.humidity}%</span>
+        <span title={t('weather.wind')}>🌬️ {Math.round(weather.current.wind)} km/h</span>
+        <span title={t('weather.uvIndex')}>☀️ UV {weather.current.uv}</span>
         {weather.current.rain !== undefined && (
-          <span title="Precipitation">🌧️ {weather.current.rain}mm</span>
+          <span title={t('weather.precipitation')}>🌧️ {weather.current.rain}mm</span>
         )}
       </div>
       <div className="flex gap-2 mt-4 pt-4 border-t border-blue-400 overflow-x-auto">
@@ -129,37 +130,37 @@ const WeatherWidget = ({ weather, loading, error, onRefresh, location }) => {
         ))}
       </div>
       <p className="text-blue-200 text-xs mt-3 text-right">
-        Updated: {new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+        {t('weather.updated')}: {new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
       </p>
     </div>
   );
 };
 
 // Market Prices Widget with Real-time updates
-const MarketPricesWidget = ({ prices, loading, lastUpdated, onRefresh }) => (
+const MarketPricesWidget = ({ prices, loading, lastUpdated, onRefresh, t }) => (
   <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-md">
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center gap-2">
-        <h3 className="font-bold text-gray-800">📈 Market Prices</h3>
-        <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full animate-pulse">LIVE</span>
+        <h3 className="font-bold text-gray-800">📈 {t('market.title')}</h3>
+        <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full animate-pulse">{t('market.live')}</span>
       </div>
       <div className="flex items-center gap-2">
         <button 
           onClick={onRefresh}
           className="text-gray-400 hover:text-green-600 transition-colors"
-          title="Refresh prices"
+          title={t('common.refresh')}
         >
           🔄
         </button>
         <Link href="/marketplace" className="text-green-600 hover:text-green-700 text-sm font-medium">
-          View All →
+          {t('common.viewAll')} →
         </Link>
       </div>
     </div>
     {loading ? (
       <div className="text-center py-8">
         <div className="animate-spin text-2xl mb-2">🔄</div>
-        <p className="text-gray-500 text-sm">Fetching prices...</p>
+        <p className="text-gray-500 text-sm">{t('market.fetchingPrices')}</p>
       </div>
     ) : prices.length > 0 ? (
       <>
@@ -177,7 +178,7 @@ const MarketPricesWidget = ({ prices, loading, lastUpdated, onRefresh }) => (
               </div>
               <div className="text-right">
                 <span className="text-green-600 font-bold">₹{price.price_per_kg}</span>
-                <span className="text-gray-500 text-sm">/kg</span>
+                <span className="text-gray-500 text-sm">{t('market.pricePerKg')}</span>
                 {price.change && (
                   <p className={`text-xs ${price.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
                     {price.change > 0 ? '↑' : '↓'} {Math.abs(price.change)}%
@@ -189,29 +190,29 @@ const MarketPricesWidget = ({ prices, loading, lastUpdated, onRefresh }) => (
         </div>
         {lastUpdated && (
           <p className="text-gray-400 text-xs mt-3 text-right">
-            Updated: {lastUpdated}
+            {t('weather.updated')}: {lastUpdated}
           </p>
         )}
       </>
     ) : (
       <div className="text-center py-4 text-gray-500">
-        <p>No price data available</p>
-        <Link href="/marketplace" className="text-green-600 text-sm">View Marketplace →</Link>
+        <p>{t('market.noPriceData')}</p>
+        <Link href="/marketplace" className="text-green-600 text-sm">{t('market.viewMarketplace')} →</Link>
       </div>
     )}
   </div>
 );
 
 // Tasks Widget
-const TasksWidget = ({ tasks }) => {
+const TasksWidget = ({ tasks, t }) => {
   const pendingTasks = tasks.filter(t => t.status === 'PENDING' || t.status === 'IN_PROGRESS');
   
   return (
     <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-md">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-bold text-gray-800">📋 Upcoming Tasks</h3>
+        <h3 className="font-bold text-gray-800">📋 {t('tasks.upcomingTasks')}</h3>
         <Link href="/tasks" className="text-green-600 hover:text-green-700 text-sm font-medium">
-          View All →
+          {t('common.viewAll')} →
         </Link>
       </div>
       {pendingTasks.length > 0 ? (
@@ -235,8 +236,8 @@ const TasksWidget = ({ tasks }) => {
         </div>
       ) : (
         <div className="text-center py-4 text-gray-500">
-          <p>No pending tasks</p>
-          <Link href="/tasks" className="text-green-600 text-sm">+ Create Task</Link>
+          <p>{t('tasks.noTasks')}</p>
+          <Link href="/tasks" className="text-green-600 text-sm">+ {t('tasks.createTask')}</Link>
         </div>
       )}
     </div>
@@ -245,6 +246,7 @@ const TasksWidget = ({ tasks }) => {
 
 const HomePage = () => {
   const router = useRouter();
+  const { t, language } = useLanguage();
   const [user, setUserData] = useState(null);
   const [stats, setStats] = useState({
     plots: 0,
@@ -443,7 +445,7 @@ const HomePage = () => {
 
   // Get current date
   const today = new Date();
-  const dateString = today.toLocaleDateString('en-IN', { 
+  const dateString = today.toLocaleDateString(language === 'mr' ? 'mr-IN' : 'en-IN', { 
     weekday: 'long', 
     year: 'numeric', 
     month: 'long', 
@@ -456,10 +458,10 @@ const HomePage = () => {
       <section className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 md:p-8 rounded-2xl">
         <p className="text-green-200 text-sm">{dateString}</p>
         <h1 className="text-2xl md:text-3xl font-bold mt-1">
-          Welcome back, {user?.full_name || 'Farmer'}! 👋
+          {t('dashboard.welcomeBack')}, {user?.full_name || 'Farmer'}! 👋
         </h1>
         <p className="mt-2 text-green-100">
-          Manage your farm efficiently with FEMS - Farm & Employee Management System
+          {t('dashboard.manageEfficiently')}
         </p>
       </section>
 
@@ -471,42 +473,44 @@ const HomePage = () => {
           error={weatherError}
           onRefresh={fetchWeather}
           location={location}
+          t={t}
         />
         <MarketPricesWidget 
           prices={marketPrices}
           loading={pricesLoading}
           lastUpdated={pricesLastUpdated}
           onRefresh={fetchMarketPrices}
+          t={t}
         />
       </div>
 
       {/* Stats Grid */}
       <section>
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Overview</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-4">{t('dashboard.overview')}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard 
-            title="Total Plots" 
+            title={t('dashboard.totalPlots')} 
             value={loading ? '...' : stats.plots} 
             icon="🌾" 
             link="/plots"
             color="bg-green-50"
           />
           <StatCard 
-            title="Crops" 
+            title={t('dashboard.crops')} 
             value={loading ? '...' : stats.crops} 
             icon="🌱" 
             link="/crops"
             color="bg-yellow-50"
           />
           <StatCard 
-            title="Crop Plans" 
+            title={t('dashboard.cropPlans')} 
             value={loading ? '...' : stats.plans} 
             icon="📋" 
             link="/crop-planning"
             color="bg-blue-50"
           />
           <StatCard 
-            title="Pending Tasks" 
+            title={t('dashboard.pendingTasks')} 
             value={loading ? '...' : stats.tasks} 
             icon="✅" 
             link="/tasks"
@@ -516,33 +520,33 @@ const HomePage = () => {
       </section>
 
       {/* Tasks Widget */}
-      <TasksWidget tasks={tasks} />
+      <TasksWidget tasks={tasks} t={t} />
 
       {/* Quick Actions */}
       <section>
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-4">{t('dashboard.quickActions')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <QuickAction 
-            title="Add New Plot"
-            description="Register a new plot"
+            title={t('dashboard.addNewPlot')}
+            description={t('dashboard.registerPlot')}
             link="/plots"
             icon="➕"
           />
           <QuickAction 
-            title="Create Task"
-            description="Plan farm activities"
+            title={t('dashboard.createTask')}
+            description={t('dashboard.planActivities')}
             link="/tasks"
             icon="📝"
           />
           <QuickAction 
-            title="Marketplace"
-            description="Buy & sell crops"
+            title={t('dashboard.marketplace')}
+            description={t('dashboard.buySell')}
             link="/marketplace"
             icon="🛒"
           />
           <QuickAction 
-            title="Resources"
-            description="Learn & grow"
+            title={t('dashboard.resources')}
+            description={t('dashboard.learnGrow')}
             link="/resources"
             icon="📚"
           />
@@ -552,26 +556,26 @@ const HomePage = () => {
       {/* Secondary Quick Actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <QuickAction 
-          title="Water Resources"
-          description="Manage irrigation"
+          title={t('dashboard.waterResources')}
+          description={t('dashboard.manageIrrigation')}
           link="/water-resources"
           icon="💧"
         />
         <QuickAction 
-          title="Machinery"
-          description="Farm equipment"
+          title={t('dashboard.machinery')}
+          description={t('dashboard.farmEquipment')}
           link="/mach-man/machinery"
           icon="🚜"
         />
         <QuickAction 
-          title="Crop Stocks"
-          description="Track inventory"
+          title={t('dashboard.cropStocks')}
+          description={t('dashboard.trackInventory')}
           link="/crop-stocks"
           icon="📦"
         />
         <QuickAction 
-          title="Crop Planning"
-          description="Plan seasons"
+          title={t('dashboard.cropPlanning')}
+          description={t('dashboard.planSeasons')}
           link="/crop-planning"
           icon="🗓️"
         />
@@ -579,12 +583,12 @@ const HomePage = () => {
 
       {/* Tips Section */}
       <section className="bg-blue-50 p-6 rounded-xl border border-blue-100">
-        <h2 className="text-xl font-bold text-gray-800 mb-3">💡 Farm Tips</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-3">💡 {t('dashboard.farmTips')}</h2>
         <ul className="space-y-2 text-gray-700">
-          <li>• Keep track of weather patterns for better crop planning</li>
-          <li>• Regular soil testing helps maintain crop health</li>
-          <li>• Plan your irrigation schedule based on crop requirements</li>
-          <li>• Maintain records of all farm activities for better analysis</li>
+          <li>• {t('dashboard.tip1')}</li>
+          <li>• {t('dashboard.tip2')}</li>
+          <li>• {t('dashboard.tip3')}</li>
+          <li>• {t('dashboard.tip4')}</li>
         </ul>
       </section>
     </div>

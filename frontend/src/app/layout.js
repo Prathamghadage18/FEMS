@@ -1,5 +1,6 @@
 
 import "./globals.css";
+import Providers from './providers';
 
 export const metadata = {
   title: "FEMS - Farm & Employee Management System",
@@ -14,9 +15,12 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased bg-white text-gray-900">
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
 }
+
 

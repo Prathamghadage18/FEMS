@@ -1,10 +1,15 @@
+"use client";
 import Image from "next/image";
 import { BsSearch } from "react-icons/bs";
 
 import { fems_logo } from "../../images";
 import { styles } from "../../styles";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useLanguage } from "../../context/LanguageContext";
 
 const Header = () => {
+	const { t } = useLanguage();
+
 	return (
 		<header className="w-full flex flex-col overflow-hidden shadow-sm">
 			<section className="bg-gray-900 py-3 px-6 flex items-center justify-between">
@@ -20,6 +25,10 @@ const Header = () => {
 					</span>
 					<span className="text-green-400 font-bold text-lg">Maha Kisan</span>
 				</div>
+				{/* Language Switcher in Header */}
+				<div className="md:hidden">
+					<LanguageSwitcher />
+				</div>
 			</section>
 
 			<section className="flex p-4 justify-between items-center text-sm bg-white border-b border-gray-100">
@@ -27,7 +36,7 @@ const Header = () => {
 					<span className="flex items-center gap-2 border border-gray-300 py-2 px-3 rounded-lg bg-gray-50">
 						<BsSearch className="text-gray-500"/>
 						<input 
-							placeholder="Search..."
+							placeholder={t('common.search') + "..."}
 							className="outline-none w-24 md:w-64 bg-transparent text-gray-700 placeholder-gray-400"
 						/>
 						<Image 
@@ -42,14 +51,13 @@ const Header = () => {
 						<option value="" disabled>Region</option>
 						<option>Kokan - Maharashtra</option>
 						<option>Vidarbha - Maharashtra</option>
-						<option>Kunnur - Kerala</option>
+						<option>Marathwada - Maharashtra</option>
+						<option>Paschim Maharashtra</option>
 					</select>
-					<select className="bg-gray-100 border border-gray-300 py-2 px-3 rounded-lg text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-green-500 w-24 md:w-40 cursor-pointer">
-						<option value="" disabled>Language</option>
-						<option>English</option>
-						<option>Hindi</option>
-						<option>Marathi</option>
-					</select>
+					{/* Desktop Language Switcher */}
+					<div className="hidden md:block">
+						<LanguageSwitcher />
+					</div>
 				</div>
 				<div className="flex gap-3 items-center">
 					<button className="py-2 px-4 rounded-lg font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors border border-gray-200">

@@ -4,7 +4,60 @@ import { useState } from "react";
 import { RiMenu3Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 
-import { navLinks } from "../../constants";
+import { useLanguage } from "../../context/LanguageContext";
+
+// Navigation links with translation keys
+const getNavLinks = (t) => [
+  {
+    title: t('nav.home'),
+    path: '/',
+  },
+  {
+    title: t('nav.crops'),
+    path: '/crops',
+  },
+  {
+    title: t('nav.cropPlanning'),
+    options: [
+      { title: t('nav.planning'), path: '/crop-planning' },
+      { title: t('nav.adjustment'), path: '/crop-planning/adjustment' },
+      { title: t('nav.sowing'), path: '/crop-planning/snowing' }
+    ]
+  },
+  {
+    title: t('nav.plots'),
+    path: '/plots',
+  },
+  {
+    title: t('nav.cropStocks'),
+    options: [
+      { title: t('nav.current'), path: '/crop-stocks' },
+      { title: t('nav.future'), path: '/crops-stocks/future' },
+    ]
+  },
+  {
+    title: t('nav.waterResources'),
+    path: '/water-resources',
+  },
+  {
+    title: t('nav.tasks'),
+    path: '/tasks',
+  },
+  {
+    title: t('nav.marketplace'),
+    path: '/marketplace',
+  },
+  {
+    title: t('nav.resources'),
+    path: '/resources',
+  },
+  {
+    title: t('nav.machineryManpower'),
+    options: [
+      { title: t('nav.machinery'), path: '/mach-man/machinery' },
+    ]
+  },
+];
 
 const NavItem = ({title, path, options}) => {
   if(!path){
@@ -74,6 +127,9 @@ const NavItemMobile = ({title, path, options}) => {
 
 const Navbar = () => {
   const [toggle, setToggle] = useState(false);
+  const { t } = useLanguage();
+  const navLinks = getNavLinks(t);
+
   return (
     <nav className="w-full flex justify-center items-center bg-white border-b border-gray-100">
       {/* Desktop Navigation */}
