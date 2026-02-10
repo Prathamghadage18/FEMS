@@ -4,6 +4,7 @@ from .views import (
     CropPlotAPIView, CropFertilizerAPIView, FarmerAPIView,
     CropStockAPIView, MachineryAPIView, ManpowerAPIView,
     FarmTaskAPIView, ResourceAPIView, MarketPriceAPIView,
+    MaharashtraCropDataView,
 )
 
 urlpatterns = [
@@ -46,4 +47,7 @@ urlpatterns = [
     # Market Prices
     path('market-prices/', MarketPriceAPIView.as_view(), name='market-price-list'),
     path('market-prices/<uuid:id>/', MarketPriceAPIView.as_view(), name='market-price-detail'),
+    
+    # Maharashtra Data
+    path('maharashtra-data/', MaharashtraCropDataView.as_view(), name='maharashtra-crop-data'),
 ]

@@ -112,3 +112,28 @@ a {
 a:hover {
   color: #047857;
 }
+
+/* Leaflet Map Custom Styles */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 280px;
+}
+
+.leaflet-popup-tip {
+  display: none;
+}
+
+.custom-popup .leaflet-popup-close-button {
+  font-size: 24px;
+  padding: 4px 8px;
+  color: #6b7280;
+}
+
+.custom-popup .leaflet-popup-close-button:hover {
+  color: #374151;
+}

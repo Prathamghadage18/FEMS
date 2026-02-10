@@ -12,7 +12,7 @@ class AuthMiddleware:
     def __call__(self, request):
         token = request.headers.get("Authorization")
         print(token)
-        if request.path.startswith("/api") and 'media' not in request.path and 'upload' not in request.path and 'login' not in request.path  and 'register' not in request.path and 'get-charged-battery' not in request.path and 'open-empty-slot' not in request.path and 'verify-otp' not in request.path:
+        if request.path.startswith("/api") and 'media' not in request.path and 'upload' not in request.path and 'login' not in request.path  and 'register' not in request.path and 'get-charged-battery' not in request.path and 'open-empty-slot' not in request.path and 'verify-otp' not in request.path and 'maharashtra-data' not in request.path:
             if not token:
                 return JsonResponse(
                     data={"msg": "Token not provided"}, status=403

@@ -249,6 +249,13 @@ export const cropsAPI = {
   delete: async (id) => {
     return apiRequest(`/crop/${id}/`, { method: "DELETE" });
   },
+
+  /**
+   * Get Maharashtra crop data
+   */
+  getMaharashtraData: async () => {
+    return apiRequest("/crop/maharashtra-data/");
+  },
 };
 
 // ============================================

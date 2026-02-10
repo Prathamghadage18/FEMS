@@ -132,6 +132,7 @@ const Marketplace = () => {
   const [wholesalers, setWholesalers] = useState([]);
   const [marketPrices, setMarketPrices] = useState([]);
   const [crops, setCrops] = useState([]);
+  const [maharashtraData, setMaharashtraData] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -155,10 +156,11 @@ const Marketplace = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [wholesalersRes, pricesRes, cropsRes] = await Promise.all([
+      const [wholesalersRes, pricesRes, cropsRes, mhDataRes] = await Promise.all([
         wholesalerAPI.getAll().catch(() => ({ rows: [] })),
         marketPricesAPI.getAll().catch(() => ({ rows: [] })),
         cropsAPI.getAll().catch(() => ({ rows: [] })),
+        cropsAPI.getMaharashtraData().catch(() => ({ data: [] })),
       ]);
 
       setWholesalers(
@@ -170,6 +172,7 @@ const Marketplace = () => {
         pricesRes.rows?.length > 0 ? pricesRes.rows : SAMPLE_MARKET_PRICES,
       );
       setCrops(cropsRes.rows || []);
+      setMaharashtraData(mhDataRes?.data || []);
     } catch (err) {
       setWholesalers(SAMPLE_WHOLESALERS);
       setMarketPrices(SAMPLE_MARKET_PRICES);
@@ -260,6 +263,16 @@ const Marketplace = () => {
           }`}
         >
           🛒 Sell Your Crops
+        </button>
+        <button
+          onClick={() => setActiveTab("maharashtra")}
+          className={`px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
+            activeTab === "maharashtra"
+              ? "text-green-600 border-green-600"
+              : "text-gray-500 border-transparent hover:text-gray-700"
+          }`}
+        >
+          📊 MH Gov Data
         </button>
       </div>
 
@@ -376,6 +389,76 @@ const Marketplace = () => {
                   Your listing will be visible to verified wholesalers in your
                   region
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* Maharashtra Data Tab */}
+          {activeTab === "maharashtra" && (
+            <div>
+              <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-6 flex justify-between items-center">
+                <div>
+                  <h2 className="font-bold text-blue-800 mb-1">
+                    🏛️ Maharashtra Government Data
+                  </h2>
+                  <p className="text-blue-700 text-sm">
+                    Live crop statistics fetched from data.gov.in (Mocked for demo).
+                  </p>
+                </div>
+                <div className="text-right text-xs text-blue-600">
+                  Updated: {new Date().toLocaleDateString()}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="py-3 px-4 text-left font-semibold text-gray-700">
+                          District
+                        </th>
+                        <th className="py-3 px-4 text-left font-semibold text-gray-700">
+                          Crop
+                        </th>
+                        <th className="py-3 px-4 text-right font-semibold text-gray-700">
+                          Area (Ha)
+                        </th>
+                        <th className="py-3 px-4 text-right font-semibold text-gray-700">
+                          Production (Tonnes)
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {maharashtraData.length > 0 ? (
+                        maharashtraData.map((item, index) => (
+                          <tr key={index} className="hover:bg-gray-50 transition-colors">
+                            <td className="py-3 px-4 text-gray-800 font-medium">
+                              {item.district}
+                            </td>
+                            <td className="py-3 px-4">
+                              <span className="bg-green-100 text-green-800 py-1 px-3 rounded-full text-xs font-semibold">
+                                {item.crop}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4 text-right text-gray-600">
+                              {parseInt(item.area).toLocaleString()}
+                            </td>
+                            <td className="py-3 px-4 text-right font-bold text-gray-800">
+                              {parseInt(item.production).toLocaleString()}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="4" className="py-8 text-center text-gray-500">
+                            No data available
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
